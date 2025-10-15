@@ -1,0 +1,7 @@
+group = 'com.moneygram'
+version = '0.0.1-SNAPSHOT'
+description = 'domain'
+
+dependencies {
+    implementation 'io.projectreactor:reactor-core:3.7.11'
+}
