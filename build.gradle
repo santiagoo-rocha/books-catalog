@@ -40,18 +40,6 @@ subprojects {
 
     testing { suites { test { useJUnitJupiter() } } }
 
-    tasks.withType(Test).configureEach {
-        finalizedBy(tasks.jacocoTestReport)
-    }
-
-    tasks.jacocoTestReport {
-        dependsOn(tasks.test)
-        reports {
-            xml.required.set(true)
-            html.required.set(true)
-        }
-    }
-
     dependencies {
         testImplementation platform('org.junit:junit-bom:5.12.2')
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
