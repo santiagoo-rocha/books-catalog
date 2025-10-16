@@ -1,5 +1,8 @@
 # Books Catalog
 
+![Build](https://github.com/santiagoo-rocha/books-catalog/actions/workflows/ci.yml/badge.svg)
+![Coverage](.github/badges/jacoco.svg)
+
 Books Catalog is a modular Java project based on **Domain-Driven Design (DDD)** and **Hexagonal Architecture** principles.
 
 ---

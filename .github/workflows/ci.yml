@@ -5,6 +5,9 @@ on:
     branches: [ "**" ]
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -24,4 +27,22 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew clean test --no-daemon
+        run: ./gradlew clean jacocoRootReport --no-daemon
+
+      - name: Generate coverage badge
+        id: jacoco
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          jacoco-csv-file: build/reports/jacoco/jacocoRootReport/jacocoRootReport.csv
+          generate-branches-badge: false
+          fail-if-coverage-less-than: 80
+
+      - name: Commit coverage badge to README
+        if: success()
+        run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .github/badges/jacoco.svg
+            git commit -m "Update JaCoCo coverage badge" || echo "No changes to commit"
+            git push
+
