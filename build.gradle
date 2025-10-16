@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.moneygram'
@@ -12,19 +13,52 @@ java {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
+tasks.register('jacocoRootReport', JacocoReport){
+    dependsOn = subprojects.tasks.test
+    additionalSourceDirs.from = subprojects.sourceSets.main.allSource.srcDirs
+    sourceDirectories.from = subprojects.sourceSets.main.allSource.srcDirs
+    classDirectories.from = subprojects.sourceSets.main.output
+    executionData.from = subprojects.jacocoTestReport.executionData
+
+    reports {
+        html.required = true
+        xml.required = true
+    }
+}
+
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'jacoco'
 
     repositories {
         mavenCentral()
     }
 
-    dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testing { suites { test { useJUnitJupiter() } } }
+
+    tasks.withType(Test).configureEach {
+        finalizedBy(tasks.jacocoTestReport)
     }
 
-    test {
-        useJUnitPlatform()
+    tasks.jacocoTestReport {
+        dependsOn(tasks.test)
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+    }
+
+    dependencies {
+        testImplementation platform('org.junit:junit-bom:5.12.2')
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
+        testRuntimeOnly  'org.junit.jupiter:junit-jupiter-engine'
+        testImplementation 'org.mockito:mockito-core:5.19.0'
+        testImplementation 'org.mockito:mockito-junit-jupiter:5.19.0'
     }
 }
 
