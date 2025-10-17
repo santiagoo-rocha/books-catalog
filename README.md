@@ -39,12 +39,19 @@ books-catalog/
 
 ---
 
-## 🚀 Requirements
+## 🧰 Requirements
 
 - **Java 23+**
 - **Gradle Wrapper** included (`./gradlew` or `gradlew.bat`)
 
 ---
+## 🚀 Deployment URL (Render)
+
+The application is live at:
+👉 **[https://books-catalog-latest.onrender.com](https://books-catalog-latest.onrender.com)**
+
+---
+
 ## 🐳 Run with Docker
 
 ```bash
