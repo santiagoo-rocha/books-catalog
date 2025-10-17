@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre
+FROM FROM eclipse-temurin:23-jre
 WORKDIR /app
 
 ARG JAR=docker/app.jar
