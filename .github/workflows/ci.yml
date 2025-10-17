@@ -29,6 +29,11 @@ jobs:
       - name: Run tests
         run: ./gradlew clean jacocoRootReport --no-daemon
 
+      - name: Resolve JAR path
+        run: |
+          JAR=$(ls -1 infrastructure/build/libs/*.jar | head -n 1)
+          echo "JAR_PATH=$JAR" >> $GITHUB_ENV
+
       - name: Generate coverage badge
         id: jacoco
         uses: cicirello/jacoco-badge-generator@v2
@@ -45,4 +50,39 @@ jobs:
             git add .github/badges/jacoco.svg
             git commit -m "Update JaCoCo coverage badge" || echo "No changes to commit"
             git push
+
+      - name: Stage JAR for Docker build
+        run: |
+          mkdir -p docker
+          cp "${{ env.JAR_PATH }}" docker/app.jar
+          echo "STAGED_JAR=docker/app.jar" >> $GITHUB_ENV
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha
+          labels: |
+            org.opencontainers.image.source=${{ github.repositoryUrl }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build & Push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            JAR=${{ env.STAGED_JAR }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
