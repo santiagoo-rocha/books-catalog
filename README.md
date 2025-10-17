@@ -1,4 +1,4 @@
-# Books Catalog
+# 📚 Books Catalog API
 
 ![Build](https://github.com/santiagoo-rocha/books-catalog/actions/workflows/ci.yml/badge.svg)
 ![Coverage](.github/badges/jacoco.svg)
@@ -7,10 +7,10 @@ Books Catalog is a modular Java project based on **Domain-Driven Design (DDD)** 
 
 ---
 
-## 🧱 Architecture
+## 🧩 Architecture
 
-- **domain/**: domain models, entities, value objects, and business rules (ports & use cases).
-- **infrastructure/**: technical adapters (persistence, web controllers, configuration, mappers).
+- **domain**: domain models, entities, value objects, and business rules (ports & use cases).
+- **infrastructure**: technical adapters (persistence, web controllers, configuration, mappers).
 
 ---
 
@@ -41,22 +41,38 @@ books-catalog/
 
 ## 🚀 Requirements
 
-- **Java 21+**
+- **Java 23+**
 - **Gradle Wrapper** included (`./gradlew` or `gradlew.bat`)
 
 ---
+## 🐳 Run with Docker
 
-## ▶️ Build and Run
-
-Build all modules:
 ```bash
+docker pull ghcr.io/santiagoo-rocha/books-catalog:latest
+docker run -p 8080:8080 ghcr.io/santiagoo-rocha/books-catalog:latest
+```
+---
+## 🧪 Run Locally
+
+If you have **Java 23** and **Gradle** installed, you can run the project directly without Docker:
+
+```bash
+# 1️⃣ Clean and build the project
 ./gradlew clean build
+
+# 2️⃣ Run tests
+./gradlew test
+
+# 3️⃣ Run the application
+./gradlew bootRun
 ```
 
-Run unit and integration tests:
-```bash
-./gradlew test
+The API will be available at:
 ```
+http://localhost:8080
+```
+
+> 💡 Make sure your `JAVA_HOME` points to a Java 23 installation.
 ---
 
 ## 🌐 REST API (OpenAPI 3.1)
@@ -66,6 +82,11 @@ The API follows REST conventions for managing books.
 **Base URL**
 ```
 http://localhost:8080
+```
+
+**Swagger URL**
+```
+http://localhost:8080/swagger-ui/index.html
 ```
 
 ### Paths and Operations
@@ -169,15 +190,3 @@ Delete a book by ID.
   "edition": 2
 }
 ```
-
----
-
-## 🧪 Testing
-
-- **Domain tests**: pure business logic (no external dependencies).
-- **Infrastructure tests**: persistence, adapters, and controller integration.
-
-```bash
-./gradlew test
-```
----
